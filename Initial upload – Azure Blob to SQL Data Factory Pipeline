@@ -1,0 +1,182 @@
+# Azure-ADF-Blob-to-SQL-Pipeline
+Azure Data Factory pipeline to ingest CSV data from Azure Blob Storage and load into Azure SQL Database using Linked Services and Copy Activity.
+
+**Create Linked Service to connect to Azure SQLDB**
+1.Login to the Azure Data Factory
+2.Go to Manage and click on +New, Select Azure
+3.Select Azure SQL Databases
+4.Assign name to Linked Service
+5. Provide the necessary details:
+•	Name: AzureSQLClinicalResearchDB_LS
+•	Connect via integration runtime: AutoResolveIntegrationRuntime
+•	Server name: clinicalresearchsqlserver
+•	Database name: ClinicalResearchDB
+•	Authentication method: Choose SQL Authentication 
+•	Username/Password: If using SQL Authentication, enter the SQL Server credentials.
+•	You need to Test Connection
+6. Test connection to ensure that Data Factory can connect to the Azure SQL Database.
+7. Create the linked service.
+
+<img width="576" height="832" alt="Linked Service (Blob)" src="https://github.com/user-attachments/assets/98972c81-1d9a-49d0-9515-05f32c2d3dce" />
+
+
+**Create Linked Service to connect to Blob Storage**
+1. Login to the Azure Data Factory
+2.Go to Manage and click on +New, Select Azure
+3.Select Blob Storage
+4. Provide the necessary details:
+Name: ClinicalResearchSA_LS
+ Description: Linked Service for connecting to Azure Blob Storage
+Connect via integration runtime: AutoResolveIntegrationRuntime
+Authentication method: Account key
+Subscription: Enter Manually
+ Storage account name: clinicalresearchsas
+5. Test connection to ensure that Data Factory can connect to the Blob Storage account successfully.
+6.Create the linked service.
+
+<img width="817" height="659" alt="image" src="https://github.com/user-attachments/assets/b2142335-9414-44ec-bf7c-21317ed135e6" />
+<img width="995" height="314" alt="image" src="https://github.com/user-attachments/assets/cfb24b69-f12f-439a-a776-5339285f4502" />
+
+**Create dataset to connect to blob within blob .CSV to ADF**
+1. Login to the Azure Data Factory
+2.Go to Manage and click on +New, Select Azure
+3. Go to Author, under Factory resources click on dataset actions
+4.Select New Dataset
+5. Select Azure
+6.Select Blob Storage, select format 
+ Dataset Name: Blob_Dept
+ Linked Service: ClinicalResearchSA_LS
+File Path:
+•	File: data/example.csv
+•	Format: DelimitedText
+•	Column delimiter:  , (comma, the file is CSV format)
+•	First row as header: Enabled (if the file has a header row)
+7.Click on Ok
+
+<img width="797" height="476" alt="image" src="https://github.com/user-attachments/assets/9e5ea0b1-4fe7-41cc-860c-852a016c09f2" />
+
+**Create Pipeline to connect to SQL Database within blob .CSV to ADF**
+1. Login to the Azure Data Factory
+2.Go to Manage and click on +New, Select Azure
+3. Go to Author, under Factory resources click on Pipeline … select New Pipeline
+4.Click on Activities and expand Activities and Drag and drop copy data to the canvas
+5.Select Source and select Source Dataset Blob_Dept
+6.Select Sink, sink dataset you need to create click on +New
+7. Select Azure
+8.Select SQL Database
+•	Dataset Name: AzSQL_Dept
+•	Linked Service: ClinicalResearchSA_LS
+•	Table Name: Dbo.Dept
+•	Select Enter manually
+•	Import Schema: None
+9.Click on Ok
+10.Click on Sink and select Table option Auto Create Table
+11. Validate and validate run time and Debug. successfully Pipeline created and go to the ClinicalResearchDB and Go to the Query Editor and enter Credentials and Under Table you can find dbo.Dept Table.
+
+    
+<img width="788" height="640" alt="image" src="https://github.com/user-attachments/assets/cdfbabbc-e1cf-4b5f-ad84-9e015d5ebf64" />
+<img width="812" height="619" alt="image" src="https://github.com/user-attachments/assets/3cad3aa8-a03a-4c5c-9483-297edf4ca247" />
+<img width="940" height="502" alt="image" src="https://github.com/user-attachments/assets/f8488329-b1cd-4aea-b839-9d4b9dd0c0ab" />
+
+Azure Data Factory – Blob to Azure SQL Pipeline
+Overview
+
+This project demonstrates an end-to-end data ingestion pipeline using Azure Data Factory. The pipeline reads CSV data from Azure Blob Storage and loads it into an Azure SQL Database table using Copy Activity.
+
+Architecture Components
+
+Azure Blob Storage (CSV Source)
+
+Azure Data Factory
+
+Linked Services
+
+Dataset Configuration
+
+Copy Data Activity
+
+Azure SQL Database (Sink)
+
+Linked Services Created
+
+Azure SQL Database
+
+Name: AzureSQLClinicalResearchDB_LS
+
+Authentication: SQL Authentication
+
+Integration Runtime: AutoResolveIntegrationRuntime
+
+Azure Blob Storage
+
+Name: ClinicalResearchSA_LS
+
+Authentication: Account Key
+
+Integration Runtime: AutoResolveIntegrationRuntime
+
+Dataset Configuration
+
+Source Dataset:
+
+Name: Blob_Dept
+
+Format: DelimitedText (CSV)
+
+File Path: data/example.csv
+
+First row as header: Enabled
+
+Sink Dataset:
+
+Name: AzSQL_Dept
+
+Table: dbo.Dept
+
+Auto Create Table: Enabled
+
+Pipeline Implementation
+
+Activity Used: Copy Data
+
+Source: Azure Blob CSV
+
+Sink: Azure SQL Database
+
+Schema Import: None
+
+Table Creation: Automatic
+
+Outcome
+
+CSV data successfully loaded into Azure SQL Database
+
+Table dbo.Dept auto-created
+
+Pipeline validated and debugged successfully
+
+Skills Demonstrated
+
+Azure Data Factory configuration
+
+Linked Service setup
+
+Cloud data ingestion
+
+Blob Storage integration
+
+SQL Database integration
+
+ETL pipeline orchestration
+
+
+
+
+
+
+
+
+
+
+   
+
